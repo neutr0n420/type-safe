@@ -5,7 +5,6 @@ export default function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'GET') {
-
     res.status(200).json({ name: 'John Doe' })
   }
   else {

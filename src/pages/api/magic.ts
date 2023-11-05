@@ -26,6 +26,5 @@ export default async function handler(req: any, res: any) {
     frequency_penalty: 0,
     presence_penalty: 0,
   })
-
   res.json(stream)
 }

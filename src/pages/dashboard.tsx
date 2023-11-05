@@ -11,7 +11,6 @@ import { useDropzone } from "react-dropzone";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-
 const Dashboard = () => {
   const [file, setFile] = useState<File>();
   const { edgestore } = useEdgeStore();
@@ -21,7 +20,7 @@ const Dashboard = () => {
 
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
-  
+
   function onDocumentLoadSuccess({ numPages }) {
     setPageNumber(numPages);
   }
@@ -34,7 +33,7 @@ const Dashboard = () => {
         <input
           type="file"
           className="flex flex-col items-center m-6 gap-2"
-          onChange={(e) => {}}
+          onChange={(e) => { }}
         />
 
         {file ?
@@ -63,11 +62,11 @@ const Dashboard = () => {
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
-              stroke-width="2"
+              strokeWidth="2"
             >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
               />
             </svg>

@@ -13,7 +13,7 @@ export default function Home() {
     <SessionProvider>
       <Navbar />
       <hr />
-      <div className="flex items-center mx-12">
+      <div className="flex items-center mx-28">
         <div className="w-1/2 ">
           <h1 className=" font-extrabold text-6xl text-gray-700">
             Understand your{" "}

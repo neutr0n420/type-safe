@@ -15,7 +15,9 @@ const Navbar = () => {
   return (
     <div className=" mx-12 my-3">
       <nav className="flex justify-between items-center">
-        <Link href="/">TypeSafe </Link>
+        <Link href="/" className="text-xl font-extrabold">
+          SummarEase{" "}
+        </Link>
         {session ? (
           <div>
             <DropdownMenu>

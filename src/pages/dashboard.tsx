@@ -1,7 +1,7 @@
 "use client";
 
 import Navbar from "@/components/ui/Navbar";
-import axios from 'axios'
+import axios from "axios";
 import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { SessionProvider } from "next-auth/react";
@@ -9,6 +9,8 @@ import { useEdgeStore } from "@/lib/edgestore";
 
 import { Document, Page, pdfjs } from "react-pdf";
 import { useDropzone } from "react-dropzone";
+import { Progress } from "@/components/ui/progress";
+import Link from "next/link";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -16,46 +18,20 @@ const Dashboard = () => {
   const [file, setFile] = useState<File>();
   const { edgestore } = useEdgeStore();
 
+  const [url, setUrl] = useState<string>("");
 
-  const [url, setUrl] = useState<string>('');
+  const [progressbar, setProgressbar] = useState(0);
 
-  const [numPages, setNumPages] = useState(null);
-  const [pageNumber, setPageNumber] = useState(1);
-
-  function onDocumentLoadSuccess({ numPages }) {
-    setPageNumber(numPages);
+  function replaceNewlines(inputString: string) {
+    inputString = inputString.replace(/\n/g, "\n");
+    return inputString; // Trim leading and trailing whitespace
   }
-
 
   return (
     <SessionProvider>
       <Navbar />
-      <div>
-        <input
-          type="file"
-          className="flex flex-col items-center m-6 gap-2"
-          onChange={(e) => { }}
-        />
-
-        {file ?
-          <Button
-            className=""
-            onClick={() => {
-              if (file) {
-                edgestore.publicFiles.upload({ file }).then(res => {
-                  setUrl(res.url)
-
-                })
-              }
-            }}
-          >
-            Upload
-          </Button>
-          :
-          <Button> Temp </Button>
-
-        }
-
+      <hr />
+      <div className="flex flex-col justify-center my-8">
         <label className="flex text-center  py-64 w-1/2 mx-auto  border-2   border-black border-opacity-40 border-dashed  rounded-md  cursor-pointer ">
           <span className="flex items-center justify-center w-full ">
             <svg
@@ -79,51 +55,72 @@ const Dashboard = () => {
             name="file_upload"
             className="hidden"
             onChange={(e) => setFile(e.target.files?.[0])}
+            accept=".pdf"
           />
         </label>
-        <Button
-          className=""
-          onClick={async () => {
-            if (file) {
-              const res = await edgestore.publicFiles.upload({ file });
-              console.log(res);
-              setUrl(res.url);
-              const body = {
-                pdfUrl: res.url
+        {progressbar === 100 ? (
+          <Link href="/demo">
+            <Button className="w-1/4 mx-auto my-8 pl-8 flex justify-center">
+              Go To Demo
+            </Button>
+          </Link>
+        ) : (
+          <Button
+            className="w-1/4 mx-auto my-8  "
+            onClick={async () => {
+              if (file) {
+                const res = await edgestore.publicFiles.upload({
+                  file,
+                  onProgressChange: (progress) => {
+                    console.log(progress);
+                    setProgressbar(progress);
+                  },
+                });
+                console.log(res);
+                setUrl(res.url);
+                const body = {
+                  pdfUrl: res.url,
+                };
+                const textIgot = await axios.post("/api/readstream", body);
+                console.log(textIgot);
+
+                const textIwant = textIgot.data.text;
+                window.localStorage.setItem(
+                  "Text",
+                  JSON.stringify(replaceNewlines(textIwant))
+                );
               }
-              const textIgot = await axios.post('/api/readstream', body)
-              console.log(textIgot)
+            }}
+          >
+            Upload
+          </Button>
+        )}
 
-            }
-          }}
-        >
-          Upload
-        </Button>
-
-      </div>
-      <div>
-        <Document
-          file="https://files.edgestore.dev/0esq3jvcv7s562de/publicFiles/_public/95598a56-d7fe-434f-8a44-3e3199e95f56.pdf"
-          onLoadSuccess={onDocumentLoadSuccess}
-        >
-          <Page pageNumber={pageNumber} />
-        </Document>
-        <p>
-          Page {pageNumber} of {numPages}
-        </p>
-        <button
-          onClick={() => setPageNumber(pageNumber - 1)}
-          disabled={pageNumber <= 1}
-        >
-          Previous
-        </button>
-        <button
-          onClick={() => setPageNumber(pageNumber + 1)}
-          // @ts-ignore
-          disabled={pageNumber >= numPages}
-        >
-          Next
-        </button>
+        <Progress value={progressbar} className="w-3/4 mx-auto" />
+        {/* <div>
+          <Document
+            file="https://files.edgestore.dev/0esq3jvcv7s562de/publicFiles/_public/95598a56-d7fe-434f-8a44-3e3199e95f56.pdf"
+            onLoadSuccess={onDocumentLoadSuccess}
+          >
+            <Page pageNumber={pageNumber} />
+          </Document>
+          <p>
+            Page {pageNumber} of {numPages}
+          </p>
+          <button
+            onClick={() => setPageNumber(pageNumber - 1)}
+            disabled={pageNumber <= 1}
+          >
+            Previous
+          </button>
+          <button
+            onClick={() => setPageNumber(pageNumber + 1)}
+            // @ts-ignore
+            disabled={pageNumber >= numPages}
+          >
+            Next
+          </button>
+        </div> */}
       </div>
     </SessionProvider>
   );

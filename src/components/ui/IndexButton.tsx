@@ -1,21 +1,19 @@
-import { useSession, signIn } from "next-auth/react"
-import { Button } from "./button"
-import Link from "next/link"
+import { useSession, signIn } from "next-auth/react";
+import { Button } from "./button";
+import Link from "next/link";
 const IndexButton = () => {
-  const session = useSession()
+  const session = useSession();
   return (
-    <>
-      {session.status === 'authenticated' ?
+    <div className=" mt-12">
+      {session.status === "authenticated" ? (
         <Link href="/dashboard">
           <Button> Start Creating </Button>
         </Link>
-        : <Button onClick={() => signIn()}>
-        login
-        </Button>
-      }
-    </>
+      ) : (
+        <Button onClick={() => signIn()}>login</Button>
+      )}
+    </div>
+  );
+};
 
-  )
-}
-
-export default IndexButton
+export default IndexButton;

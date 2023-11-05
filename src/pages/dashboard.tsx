@@ -1,6 +1,7 @@
 "use client";
 
 import Navbar from "@/components/ui/Navbar";
+import axios from 'axios'
 import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { SessionProvider } from "next-auth/react";
@@ -39,11 +40,12 @@ const Dashboard = () => {
         {file ?
           <Button
             className=""
-            onClick={async () => {
+            onClick={() => {
               if (file) {
-                const res = await edgestore.publicFiles.upload({ file });
-                console.log(res.url);
-                setUrl(res.url)
+                edgestore.publicFiles.upload({ file }).then(res => {
+                  setUrl(res.url)
+
+                })
               }
             }}
           >
@@ -86,6 +88,12 @@ const Dashboard = () => {
               const res = await edgestore.publicFiles.upload({ file });
               console.log(res);
               setUrl(res.url);
+              const body = {
+                pdfUrl: res.url
+              }
+              const textIgot = await axios.post('/api/readstream', body)
+              console.log(textIgot)
+
             }
           }}
         >
@@ -111,6 +119,7 @@ const Dashboard = () => {
         </button>
         <button
           onClick={() => setPageNumber(pageNumber + 1)}
+          // @ts-ignore
           disabled={pageNumber >= numPages}
         >
           Next

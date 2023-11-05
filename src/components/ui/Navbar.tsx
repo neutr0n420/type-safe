@@ -15,7 +15,7 @@ const Navbar = () => {
   const { data: session } = useSession();
   return (
     <div className=" mx-12 my-3">
-      <nav className="flex justify-between">
+      <nav className="flex justify-between items-center">
         <Link href="/">TypeSafe </Link>
         {session ? (
           <div>
@@ -38,7 +38,7 @@ const Navbar = () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   {" "}
-                  <Link href="/playground"></Link>Playground
+                  <Link href="/playground">Playground</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Link href="/dashboard">Dashboard</Link>

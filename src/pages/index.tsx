@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import Navbar from "@/components/ui/Navbar";
 import { SessionProvider, useSession, signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
+import IndexButton from "@/components/ui/IndexButton";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -66,7 +67,7 @@ export default function Home() {
             </div>{" "}
             in no time
           </h1>
-          <Button>Click me</Button>
+          <IndexButton />
         </div>
         <div>
           <Image

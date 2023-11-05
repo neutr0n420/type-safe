@@ -1,26 +1,31 @@
 "use client";
+
 import Navbar from "@/components/ui/Navbar";
 import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { SessionProvider } from "next-auth/react";
 import { useEdgeStore } from "@/lib/edgestore";
+
 import { Document, Page, pdfjs } from "react-pdf";
 import { useDropzone } from "react-dropzone";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
+
 const Dashboard = () => {
   const [file, setFile] = useState<File>();
   const { edgestore } = useEdgeStore();
+
+
+  const [url, setUrl] = useState<string>('');
+
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
-  const [url, setUrl] = useState<{
-    url: string;
-  }>();
-
+  
   function onDocumentLoadSuccess({ numPages }) {
     setPageNumber(numPages);
   }
+
 
   return (
     <SessionProvider>
@@ -31,6 +36,24 @@ const Dashboard = () => {
           className="flex flex-col items-center m-6 gap-2"
           onChange={(e) => {}}
         />
+
+        {file ?
+          <Button
+            className=""
+            onClick={async () => {
+              if (file) {
+                const res = await edgestore.publicFiles.upload({ file });
+                console.log(res.url);
+                setUrl(res.url)
+              }
+            }}
+          >
+            Upload
+          </Button>
+          :
+          <Button> Temp </Button>
+
+        }
 
         <label className="flex text-center  py-64 w-1/2 mx-auto  border-2   border-black border-opacity-40 border-dashed  rounded-md  cursor-pointer ">
           <span className="flex items-center justify-center w-full ">
@@ -69,6 +92,7 @@ const Dashboard = () => {
         >
           Upload
         </Button>
+
       </div>
       <div>
         <Document

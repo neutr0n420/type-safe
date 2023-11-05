@@ -9,7 +9,6 @@ import {
 } from "./dropdown-menu";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Button } from "./button";
-import Image from "next/image";
 
 const Navbar = () => {
   const { data: session } = useSession();
@@ -22,7 +21,7 @@ const Navbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <img
-                  src={session.user?.image}
+                  src={session.user?.image as string}
                   width={50}
                   height={50}
                   alt="User's profile picture"

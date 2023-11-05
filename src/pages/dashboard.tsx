@@ -1,15 +1,17 @@
 "use client";
+
 import Navbar from "@/components/ui/Navbar";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { SessionProvider } from "next-auth/react";
 import { useEdgeStore } from "@/lib/edgestore";
+
 const Dashboard = () => {
   const [file, setFile] = useState<File>();
   const { edgestore } = useEdgeStore();
-  const [url, setUrl] = useState<{
-    url: string;
-  }>();
+
+  const [url, setUrl] = useState<string>('');
+
   return (
     <SessionProvider>
       <Navbar />
@@ -21,17 +23,24 @@ const Dashboard = () => {
             setFile(e.target.files?.[0]);
           }}
         />
-        <Button
-          className=""
-          onClick={async () => {
-            if (file) {
-              const res = await edgestore.publicFiles.upload({ file });
-              console.log(res);
-            }
-          }}
-        >
-          Upload
-        </Button>
+
+        {file ?
+          <Button
+            className=""
+            onClick={async () => {
+              if (file) {
+                const res = await edgestore.publicFiles.upload({ file });
+                console.log(res.url);
+                setUrl(res.url)
+              }
+            }}
+          >
+            Upload
+          </Button>
+          :
+          <Button> Temp </Button>
+
+        }
       </div>
     </SessionProvider>
   );

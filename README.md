@@ -1,3 +1,15 @@
+
+# Problem Statement
+Imagine reading lots of research paper or any concise litereature out there, best we can do is re read them so we can understand and retain. What if i tell you there was a better way.
+Let me tell you how, first step is to bring your literature and you will get concise and precise explaination with Flowcharts. 
+So, that you can get Understanding of very concise literature with proper analogies.
+
+# There are various challenges we ran into which includes
+- Brainstroming for the project, 
+- Finding the valid API key of OpenAi
+- Authentication, Sending pdf's to the cloud
+- Last min's bugs (we are still solving it lol).
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
